@@ -91,8 +91,8 @@ timespec GetCorrectTime(timespec time){
     
     timespec wait;
 
-    wait.tv_sec = now.tv_sec + arguments->t1.tv_sec;
-    wait.tv_nsec = now.tv_usec*1000 + arguments->t1.tv_nsec;
+    wait.tv_sec = now.tv_sec + time->t1.tv_sec;
+    wait.tv_nsec = now.tv_usec*1000 + time->t1.tv_nsec;
     return wait;
 }
 
@@ -117,26 +117,26 @@ void* simulateCustomer(void *args) {
     Sleep(random()%10000);
     printf("Пришел клиент №%d\n", arguments->id);
     
-    int result = *queue_first.lock(GetCorrectTime(arguments->t1));
+    int result = queue_first->lock(GetCorrectTime(arguments->t1));
     if (result == 0){
         Sleep(100 + random() % 100);
-        *queue_first.unlock();
+        queue_first->unlock();
         printf("Обслужили клиента №%d в кассе №%d\n", arguments->id, variant == 1 ? 1: 2);
         return (void*)1;
     }
 
-    result = *queue_second.lock(GetCorrectTime(arguments->t1));
+    result = queue_second->lock(GetCorrectTime(arguments->t1));
     if (result == 0){
         Sleep(100 + random() % 100);
-        *queue_second.unlock();
+        queue_second->unlock();
         printf("Обслужили клиента №%d в кассе №%d\n", arguments->id, variant == 1 ? 2: 1);
         return (void*)2;
     }
 
-    result = *queue_first.lock(GetCorrectTime(arguments->t2));
+    result = queue_first->lock(GetCorrectTime(arguments->t2));
     if (result == 0){
         Sleep(100 + random() % 100);
-        *queue_first.unlock();
+        queue_first->unlock();
         printf("Обслужили клиента №%d в кассе №%d(1)\n", arguments->id, variant == 1 ? 1: 2);
         return (void*)3;
     }
