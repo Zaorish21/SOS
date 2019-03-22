@@ -91,8 +91,8 @@ timespec GetCorrectTime(timespec time){
     
     timespec wait;
 
-    wait.tv_sec = now.tv_sec + time->t1.tv_sec;
-    wait.tv_nsec = now.tv_usec*1000 + time->t1.tv_nsec;
+    wait.tv_sec = now.tv_sec + time.t1.tv_sec;
+    wait.tv_nsec = now.tv_usec*1000 + time.t1.tv_nsec;
     return wait;
 }
 
